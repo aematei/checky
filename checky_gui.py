@@ -2,12 +2,9 @@
 import tkinter as tk
 from tkinter import filedialog as fd
 
-import csv
+from checky import Checky
 
-from missing import Missing
-from found import Found
-
-class Checky():
+class CheckyGUI():
 	def __init__(self, master, *args, **kwargs):
 	# Main Frame
 		self.master = master
@@ -59,8 +56,7 @@ class Checky():
 		self.single_entry.grid(row=0, column=1)
 
 # Functionality
-		self.missing = Missing()
-		self.found = Found()
+		self.checky = Checky()
 
 	# Missing 
 	def load_missing_file(self):
@@ -68,77 +64,45 @@ class Checky():
 		filename = fd.askopenfilename(initialdir="/Desktop",
 			title="Select csv file", filetypes=(("csv files","*.csv"),
 				("all files","*.*")))
-		self.populate_missing(filename)
-		self.check_missing_load()
-		self.update_text()
+		self.checky.load_missing_file()
 
-	def populate_missing(self, filename):
-		""" 
-		Takes a barcode vs. description csv file and
-		populates a dictionary as {barcode: description}
-		"""
-		reader = csv.DictReader(open(str(filename)))
-		result = {}
-		for row in reader:
-			if row not in self.found.data.items():
-				for column, value in row.items():
-					result.setdefault(column, []).append(value.rstrip())
-		self.missing.data.update(dict(zip(result['Barcode'],
-			result['Description'])))
-
-	def update_missing_text(self):
-		"""Updates the 'missing' data text field."""
-		self.missing_text.config(state=tk.NORMAL)
-		self.missing_text.delete(1.0, tk.END)
-		for barcode, description in self.missing.data.items():
-			self.missing_text.insert(tk.INSERT, barcode + ':' + description
-				+ '\n')
-		self.missing_text.config(state=tk.DISABLED)
-
+	
 	# Found
 	def load_batch_found_file(self):
 		"""Loads a batch of found data from a text file."""
 		filename = fd.askopenfilename(initialdir="/Desktop",
 			title="Select csv file", filetypes=(("txt files","*.txt"),
 				("all files","*.*")))
-		#print(filename)
-		self.found.batch(filename)
-		self.check_found_load()
-		self.update_text()
+		self.checky.load_batch_found_file()
 
-	def update_found_text(self):
-		"""Updates the 'Found' data text field."""
-		self.found_text.config(state=tk.NORMAL)
-		self.found_text.delete(1.0, tk.END)
-		for barcode, description in self.found.data.items():
-			self.found_text.insert(tk.INSERT, barcode + ':' + description
-				+ '\n')
-		self.found_text.config(state=tk.DISABLED)
-		
-
-	def check_found_load(self):
-		"""Checks if found.check_these is in missing.data."""
-		for datum in self.found.check_these:
-			if datum in self.missing.data:
-				if datum not in self.found.data:
-					self.found.data[datum] = self.missing.data.pop(datum)
-
-
-	def check_missing_load(self):
-		"""Checks if new missing data is in missing.data."""
-		for datum in self.found.data:
-			if datum in self.missing.data:
-				del self.missing.data[datum]
-		
-		
 	def update_text(self):
 		"""Updates both text fields."""
 		self.update_found_text()
 		self.update_missing_text()
 
+	def update_found_text(self):
+		"""Updates the 'Found' data text field."""
+		self.found_text.config(state=tk.NORMAL)
+		self.found_text.delete(1.0, tk.END)
+		for barcode, description in self.checky.found.data.items():
+			self.found_text.insert(tk.INSERT, barcode + ':' + description
+				+ '\n')
+		self.found_text.config(state=tk.DISABLED)
+
+	def update_missing_text(self):
+		"""Updates the 'missing' data text field."""
+		self.missing_text.config(state=tk.NORMAL)
+		self.missing_text.delete(1.0, tk.END)
+		for barcode, description in self.checky.missing.data.items():
+			self.missing_text.insert(tk.INSERT, barcode + ':' + description
+				+ '\n')
+		self.missing_text.config(state=tk.DISABLED)
+
+
+
 
 
 if __name__ == "__main__":
 	root = tk.Tk()
-	checky = Checky(root)
+	checky = CheckyGUI(root)
 	root.mainloop()
