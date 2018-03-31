@@ -64,7 +64,7 @@ class CheckyGUI():
 		filename = fd.askopenfilename(initialdir="/Desktop",
 			title="Select csv file", filetypes=(("csv files","*.csv"),
 				("all files","*.*")))
-		self.checky.load_missing_file()
+		self.checky.load_missing_file(filename)
 
 	
 	# Found
@@ -73,7 +73,7 @@ class CheckyGUI():
 		filename = fd.askopenfilename(initialdir="/Desktop",
 			title="Select csv file", filetypes=(("txt files","*.txt"),
 				("all files","*.*")))
-		self.checky.load_batch_found_file()
+		self.checky.load_batch_found_file(filename)
 
 	def update_text(self):
 		"""Updates both text fields."""
@@ -88,6 +88,7 @@ class CheckyGUI():
 			self.found_text.insert(tk.INSERT, barcode + ':' + description
 				+ '\n')
 		self.found_text.config(state=tk.DISABLED)
+	
 
 	def update_missing_text(self):
 		"""Updates the 'missing' data text field."""

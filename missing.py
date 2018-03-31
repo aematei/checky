@@ -6,7 +6,7 @@ class Missing():
 		self.data = {}
 		self.found = found
 	
-	def populate(self, filename, found):
+	def populate(self, filename):
 		""" 
 		Takes a barcode vs. description csv file and
 		populates a dictionary as {barcode: description}
