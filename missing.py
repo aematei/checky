@@ -17,5 +17,9 @@ class Missing():
 			if row not in self.found.data.items():
 				for column, value in row.items():
 					result.setdefault(column, []).append(value.rstrip())
-		self.data.update(dict(zip(result['Barcode'], result['Description'])))
+		# Check for duplicates before adding result to missing data.
+		for datum in result:
+			if datum not in self.data:
+				self.data.update(dict(zip(result['Barcode'],
+					result['Description'])))
 

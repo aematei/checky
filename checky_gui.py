@@ -65,6 +65,7 @@ class CheckyGUI():
 			title="Select csv file", filetypes=(("csv files","*.csv"),
 				("all files","*.*")))
 		self.checky.load_missing_file(filename)
+		self.update_text()
 
 	
 	# Found
@@ -74,6 +75,7 @@ class CheckyGUI():
 			title="Select csv file", filetypes=(("txt files","*.txt"),
 				("all files","*.*")))
 		self.checky.load_batch_found_file(filename)
+		self.update_text()
 
 	def update_text(self):
 		"""Updates both text fields."""
