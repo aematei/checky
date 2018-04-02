@@ -20,6 +20,12 @@ class Checky():
 		"""Loads a batch of found data from a text file."""
 		self.found.populate(filename)
 		self.check_found_load()
+
+	def single_check(self, code):
+		if code not in self.found.data:
+			if code in self.missing.data:
+				self.found.data[code] = self.missing.data.pop(code)
+
 		
 #### SUB FUNCTIONS
 

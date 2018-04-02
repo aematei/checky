@@ -30,7 +30,7 @@ class CheckyGUI():
 			bg="RED")
 
 	# Bottom Frame Widgets
-		self.search_button = tk.Button(master=self.bottom_frame, text="Search")
+		self.search_button = tk.Button(master=self.bottom_frame, text="Search", command=self.search)
 		self.single_entry = tk.Entry(master=self.bottom_frame)
 
 
@@ -54,6 +54,9 @@ class CheckyGUI():
 		# Bottom Frame Layout
 		self.search_button.grid(row=0, column=0)
 		self.single_entry.grid(row=0, column=1)
+
+# Key Bindings
+		master.bind('<Return>', self.search)
 
 # Functionality
 		self.checky = Checky()
@@ -91,7 +94,6 @@ class CheckyGUI():
 				+ '\n')
 		self.found_text.config(state=tk.DISABLED)
 	
-
 	def update_missing_text(self):
 		"""Updates the 'missing' data text field."""
 		self.missing_text.config(state=tk.NORMAL)
@@ -101,11 +103,19 @@ class CheckyGUI():
 				+ '\n')
 		self.missing_text.config(state=tk.DISABLED)
 
+	def search(self, event=None):
+		code = self.single_entry.get()
+		print(code)
+		self.checky.single_check(code)
+		self.update_text()
+		self.single_entry.delete(0, tk.END)
+		
+
 
 
 
 
 if __name__ == "__main__":
 	root = tk.Tk()
-	checky = CheckyGUI(root)
+	checky_app = CheckyGUI(root)
 	root.mainloop()
