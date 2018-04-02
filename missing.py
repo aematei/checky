@@ -17,6 +17,5 @@ class Missing():
 			if row not in self.found.data.items():
 				for column, value in row.items():
 					result.setdefault(column, []).append(value.rstrip())
-		self.data.update(dict(zip(result['Barcode'],
-			result['Description'])))
+		self.data.update(dict(zip(result['Barcode'], result['Description'])))
 

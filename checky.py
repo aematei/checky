@@ -14,7 +14,7 @@ class Checky():
 		"""Loads missing data from a CSV file into the 'Missing' object."""
 		self.missing.populate(filename)
 		self.update_missing_load()
-		print(self.missing.data)
+		
 
 	def load_batch_found_file(self, filename):
 		"""Loads a batch of found data from a text file."""
