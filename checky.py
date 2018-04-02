@@ -8,6 +8,9 @@ class Checky():
 		self.found = Found()
 		self.missing = Missing(self.found)
 		
+		# Was the last scanned code in missing? Boolean.
+		self.single_code_flag = False
+		
 #### CORE FUNCTIONS 	
 
 	def load_missing_file(self, filename):
@@ -25,6 +28,10 @@ class Checky():
 		if code not in self.found.data:
 			if code in self.missing.data:
 				self.found.data[code] = self.missing.data.pop(code)
+				self.single_code_flag = True
+			else:
+				self.single_code_flag = False
+
 
 		
 #### SUB FUNCTIONS

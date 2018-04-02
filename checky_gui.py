@@ -6,6 +6,9 @@ from checky import Checky
 
 class CheckyGUI():
 	def __init__(self, master, *args, **kwargs):
+	
+		self.last_code = tk.StringVar()
+
 	# Main Frame
 		self.master = master
 
@@ -32,7 +35,7 @@ class CheckyGUI():
 	# Bottom Frame Widgets
 		self.search_button = tk.Button(master=self.bottom_frame, text="Search", command=self.search)
 		self.single_entry = tk.Entry(master=self.bottom_frame)
-
+		self.last_entry_label = tk.Text(master=self.bottom_frame, height=1, width=12, state=tk.DISABLED)
 
 # Layout
 	# Sub Frames
@@ -54,12 +57,14 @@ class CheckyGUI():
 		# Bottom Frame Layout
 		self.search_button.grid(row=0, column=0)
 		self.single_entry.grid(row=0, column=1)
+		self.last_entry_label.grid(row=0, column=2)
 
 # Key Bindings
 		master.bind('<Return>', self.search)
 
 # Functionality
 		self.checky = Checky()
+		#self.poop = tk.StringVar()
 
 	# Missing 
 	def load_missing_file(self):
@@ -103,10 +108,25 @@ class CheckyGUI():
 				+ '\n')
 		self.missing_text.config(state=tk.DISABLED)
 
+	def update_last_entry(self, code):
+		self.last_entry_label.config(state=tk.NORMAL)
+		self.last_entry_label.delete(1.0, tk.END)
+		self.last_entry_label.insert(tk.INSERT, code)
+		self.last_entry_label.config(state=tk.DISABLED)
+
+	def entry_state(self):
+		if self.checky.single_code_flag:
+			self.last_entry_label.config(fg='GREEN')
+		else:
+			self.last_entry_label.config(fg='RED')
+
+
+
 	def search(self, event=None):
 		code = self.single_entry.get()
-		print(code)
 		self.checky.single_check(code)
+		self.entry_state()
+		self.update_last_entry(code)
 		self.update_text()
 		self.single_entry.delete(0, tk.END)
 		
