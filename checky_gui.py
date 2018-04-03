@@ -2,12 +2,15 @@
 import tkinter as tk
 from tkinter import filedialog as fd
 
+
 from checky import Checky
 
 class CheckyGUI():
 	def __init__(self, master, *args, **kwargs):
-	
+
+	# tk Vars
 		self.last_code = tk.StringVar()
+		self.sound_on_var = tk.BooleanVar()
 
 	# Main Frame
 		self.master = master
@@ -33,9 +36,14 @@ class CheckyGUI():
 			bg="RED")
 
 	# Bottom Frame Widgets
-		self.search_button = tk.Button(master=self.bottom_frame, text="Search", command=self.search)
+		self.sound_on_box = tk.Checkbutton(master=self.bottom_frame,
+			text="Sound", variable=self.sound_on_var, onvalue=True,
+				offvalue=False)
+		self.search_button = tk.Button(master=self.bottom_frame, text="Search",
+			command=self.search)
 		self.single_entry = tk.Entry(master=self.bottom_frame)
-		self.last_entry_label = tk.Text(master=self.bottom_frame, height=1, width=12, state=tk.DISABLED)
+		self.last_entry_label = tk.Text(master=self.bottom_frame, height=1,
+			width=12, state=tk.DISABLED)
 
 # Layout
 	# Sub Frames
@@ -55,17 +63,17 @@ class CheckyGUI():
 		self.missing_text.grid(row=1, column=0)
 		
 		# Bottom Frame Layout
-		self.search_button.grid(row=0, column=0)
-		self.single_entry.grid(row=0, column=1)
-		self.last_entry_label.grid(row=0, column=2)
+		self.sound_on_box.grid(row=0, column=0, sticky=tk.W)
+		self.search_button.grid(row=0, column=1)
+		self.single_entry.grid(row=0, column=2)
+		self.last_entry_label.grid(row=0, column=3)
 
 # Key Bindings
 		master.bind('<Return>', self.search)
 
 # Functionality
 		self.checky = Checky()
-		#self.poop = tk.StringVar()
-
+		
 	# Missing 
 	def load_missing_file(self):
 		"""Loads missing data from a CSV file into the 'Missing' object."""
@@ -124,6 +132,7 @@ class CheckyGUI():
 
 	def search(self, event=None):
 		code = self.single_entry.get()
+		self.checky.sound_on = self.sound_on_var.get()
 		self.checky.single_check(code)
 		self.entry_state()
 		self.update_last_entry(code)

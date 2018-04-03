@@ -1,5 +1,6 @@
 from missing import Missing
 from found import Found 
+import simpleaudio as sa
 
 class Checky():
 	"""The checky main app"""
@@ -10,6 +11,9 @@ class Checky():
 		
 		# Was the last scanned code in missing? Boolean.
 		self.single_code_flag = False
+		self.sound_on = False
+		self.yes_sound = sa.WaveObject.from_wave_file("audio/Yes.wav")
+		self.no_sound = sa.WaveObject.from_wave_file("audio/No.wav")
 		
 #### CORE FUNCTIONS 	
 
@@ -29,8 +33,17 @@ class Checky():
 			if code in self.missing.data:
 				self.found.data[code] = self.missing.data.pop(code)
 				self.single_code_flag = True
+				if self.sound_on:
+					self.yes_sound.play()
+				
 			else:
 				self.single_code_flag = False
+				if self.sound_on:
+					self.no_sound.play()
+		elif code in self.found.data:
+			if self.sound_on:
+				self.yes_sound.play()
+				
 
 
 		
