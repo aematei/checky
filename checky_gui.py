@@ -16,7 +16,7 @@ class CheckyGUI():
 		self.master = master
 
 	# Sub Frames
-		self.top_frame = tk.Frame(master=self.master)
+		#self.top_frame = tk.Frame(master=self.master)
 		self.left_frame = tk.Frame(master=self.master)
 		self.right_frame = tk.Frame(master=self.master)
 		self.bottom_frame = tk.Frame(master=self.master)
@@ -27,13 +27,15 @@ class CheckyGUI():
 		self.load_batch_found = tk.Button(master=self.left_frame,
 			text="Load Found", command=self.load_batch_found_file)
 		self.found_text = tk.Text(master=self.left_frame, state=tk.DISABLED,
-			bg="GREEN")
+			bg="GREEN", relief="sunken")
+		self.found_text.bind("<1>", lambda event: self.found_text.focus_set())
 
 	# Right Frame Widgets
 		self.load_missing = tk.Button(master=self.right_frame,
 			text="Load Missing", command=self.load_missing_file)
 		self.missing_text = tk.Text(master=self.right_frame, state=tk.DISABLED,
 			bg="RED")
+		self.missing_text.bind("<1>", lambda event: self.missing_text.focus_set())
 
 	# Bottom Frame Widgets
 		self.sound_on_box = tk.Checkbutton(master=self.bottom_frame,
@@ -47,26 +49,43 @@ class CheckyGUI():
 
 # Layout
 	# Sub Frames
-		self.top_frame.grid(row=0, column=0, columnspan=2)
-		self.left_frame.grid(row=1, column=0)
-		self.right_frame.grid(row=1, column=1)
+		#self.top_frame.grid(row=0, column=0, columnspan=2, sticky=tk.N)
+		self.left_frame.grid(row=1, column=0, sticky=tk.N)
+		self.right_frame.grid(row=1, column=1, sticky=tk.N)
 		self.bottom_frame.grid(row=2, column=0, columnspan=2)
 
 		# Top Frame Layout
 
 		# Left Frame Layout
-		self.load_batch_found.grid(row=0, column=0)
-		self.found_text.grid(row=1, column=0)
+		self.load_batch_found.grid(row=0, column=0, sticky=(tk.N, tk.S))
+		self.found_text.grid(row=1, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
 		
 		# Right Frame Layout
-		self.load_missing.grid(row=0, column=0)
-		self.missing_text.grid(row=1, column=0)
+		self.load_missing.grid(row=0, column=0, sticky=(tk.N, tk.S))
+		self.missing_text.grid(row=1, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
 		
 		# Bottom Frame Layout
-		self.sound_on_box.grid(row=0, column=0, sticky=tk.W)
-		self.search_button.grid(row=0, column=1)
-		self.single_entry.grid(row=0, column=2)
-		self.last_entry_label.grid(row=0, column=3)
+		self.sound_on_box.grid(row=0, column=0, sticky=tk.N)
+		self.search_button.grid(row=0, column=1, sticky=tk.N)
+		self.single_entry.grid(row=0, column=2, sticky=tk.N)
+		self.last_entry_label.grid(row=0, column=3, sticky=tk.N)
+
+# Weights
+		#self.master.columnconfigure(0, weight=1)
+		#self.master.columnconfigure(1, weight=1)
+		#self.master.rowconfigure(0, weight=1)
+		#self.master.rowconfigure(1, weight=1)
+		#self.left_frame.columnconfigure(0, weight=1)
+		#self.left_frame.columnconfigure(1, weight=1)
+		#self.left_frame.rowconfigure(0, weight=1)
+		#self.left_frame.rowconfigure(2, weight=1)
+		#self.right_frame.columnconfigure(0, weight=1)
+		#self.right_frame.columnconfigure(1, weight=1)
+		#self.right_frame.rowconfigure(0, weight=1)
+		#self.right_frame.rowconfigure(2, weight=1)
+		#self.found_text.columnconfigure(0, weight=1)
+
+
 
 # Key Bindings
 		master.bind('<Return>', self.search)
