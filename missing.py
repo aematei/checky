@@ -16,7 +16,8 @@ class Missing():
 		for row in reader:
 			if row not in self.found.data.items():
 				for column, value in row.items():
-					result.setdefault(column, []).append(value.rstrip())
+					if value != '':
+						result.setdefault(column, []).append(value.rstrip())
 		# Check for duplicates before adding result to missing data.
 		for datum in result:
 			if datum not in self.data:

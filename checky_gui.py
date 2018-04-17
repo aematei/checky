@@ -1,9 +1,8 @@
-# Use Tkinter for python 2, tkinter for python 3
 import tkinter as tk
 from tkinter import filedialog as fd
 
-
 from checky import Checky
+
 
 class CheckyGUI():
 	def __init__(self, master, *args, **kwargs):
@@ -14,77 +13,127 @@ class CheckyGUI():
 
 	# Main Frame
 		self.master = master
+		#self.master.geometry('10x10+0+0')
+
+	# Colors
+		self.bg_tan = '#e5e1da'
+		self.bg_green = '#f7fff7'
+		self.bg_red = '#fff7f7'
 
 	# Sub Frames
-		#self.top_frame = tk.Frame(master=self.master)
-		self.left_frame = tk.Frame(master=self.master)
-		self.right_frame = tk.Frame(master=self.master)
-		self.bottom_frame = tk.Frame(master=self.master)
+
+		self.master["bg"] = self.bg_tan
+
+		self.top_frame = tk.Frame(master=self.master, bg=self.bg_tan)
+
+		self.load_frame_left = tk.Frame(master=self.master, bg=self.bg_tan)
+		self.load_frame_right = tk.Frame(master=self.master, bg=self.bg_tan)
+
+		self.text_frame_left = tk.LabelFrame(master=self.master)
+		self.text_frame_right = tk.LabelFrame(master=self.master)
+
+		self.bottom_frame = tk.Frame(master=self.master, bg=self.bg_tan)
+
+		self.x_scroll_left = tk.Scrollbar(master=self.text_frame_left, orient=tk.HORIZONTAL)
+		self.y_scroll_left = tk.Scrollbar(master=self.text_frame_left)
+
+		self.x_scroll_right = tk.Scrollbar(master=self.text_frame_right, orient=tk.HORIZONTAL)
+		self.y_scroll_right = tk.Scrollbar(master=self.text_frame_right)
+
+	# Menu Bar
+		self.menubar = tk.Menu(master=self.top_frame)
+		self.filemenu = tk.Menu(self.menubar, tearoff=0)
+		self.filemenu.add_command(label="New Session")
+		self.filemenu.add_command(label="Load")
+		self.filemenu.add_command(label="Save")
+		self.filemenu.add_command(label="Print...")
+		self.filemenu.add_command(label="Quit")
+		self.menubar.add_cascade(label="File", menu=self.filemenu)
+		
+		self.master.config(menu=self.menubar)
+
+
 
 	# Top Frame Widgets
 
-	# Left Frame Widgets
-		self.load_batch_found = tk.Button(master=self.left_frame,
-			text="Load Found", command=self.load_batch_found_file)
-		self.found_text = tk.Text(master=self.left_frame, state=tk.DISABLED,
-			bg="GREEN", relief="sunken")
-		self.found_text.bind("<1>", lambda event: self.found_text.focus_set())
+		
 
-	# Right Frame Widgets
-		self.load_missing = tk.Button(master=self.right_frame,
-			text="Load Missing", command=self.load_missing_file)
-		self.missing_text = tk.Text(master=self.right_frame, state=tk.DISABLED,
-			bg="RED")
-		self.missing_text.bind("<1>", lambda event: self.missing_text.focus_set())
+
+	# Text Widgets 
+		self.load_batch_found = tk.Button(master=self.load_frame_left,
+			text="Load Found", bg=self.bg_tan, highlightthickness=0, highlightbackground=self.bg_tan,
+			command=self.load_batch_found_file)
+		self.found_text = tk.Text(master=self.text_frame_left, state=tk.DISABLED,
+			relief="sunken", height=500, bg=self.bg_green, highlightbackground=self.bg_green)
+
+		self.load_missing = tk.Button(master=self.load_frame_right,
+			text="Load Missing", bg=self.bg_tan, highlightthickness=0, highlightbackground=self.bg_tan,
+			command=self.load_missing_file)
+		self.missing_text = tk.Text(master=self.text_frame_right, state=tk.DISABLED, bg=self.bg_red, highlightbackground=self.bg_red)	
+
+		self.y_scroll_right.config(command=self.missing_text.yview)
+		self.x_scroll_right.config(command=self.missing_text.xview)
+
+		self.y_scroll_left.config(command=self.missing_text.yview)
+		self.x_scroll_left.config(command=self.missing_text.xview)
+		
 
 	# Bottom Frame Widgets
 		self.sound_on_box = tk.Checkbutton(master=self.bottom_frame,
 			text="Sound", variable=self.sound_on_var, onvalue=True,
-				offvalue=False)
-		self.search_button = tk.Button(master=self.bottom_frame, text="Search",
+				offvalue=False, bg=self.bg_tan, highlightthickness=0)
+		self.search_button = tk.Button(master=self.bottom_frame, text="Search", bg=self.bg_tan, highlightthickness=0, highlightbackground=self.bg_tan,
 			command=self.search)
-		self.single_entry = tk.Entry(master=self.bottom_frame)
+		self.single_entry = tk.Entry(master=self.bottom_frame, highlightbackground=self.bg_tan, relief="sunken")
 		self.last_entry_label = tk.Text(master=self.bottom_frame, height=1,
-			width=12, state=tk.DISABLED)
+			width=12, state=tk.DISABLED, bg=self.bg_tan, highlightthickness=0)
 
 # Layout
 	# Sub Frames
-		#self.top_frame.grid(row=0, column=0, columnspan=2, sticky=tk.N)
-		self.left_frame.grid(row=1, column=0, sticky=tk.N)
-		self.right_frame.grid(row=1, column=1, sticky=tk.N)
-		self.bottom_frame.grid(row=2, column=0, columnspan=2)
+		self.top_frame.grid(row=0, column=0, columnspan=3, sticky=(tk.N, tk.E, tk.W))
+
+		self.load_frame_left.grid(row=1, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
+		self.load_frame_right.grid(row=1, column=2, sticky=(tk.N, tk.E, tk.S, tk.W))
+
+		self.text_frame_left.grid(row=2, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
+		self.text_frame_right.grid(row=2, column=2, sticky=(tk.N, tk.E, tk.S, tk.W))
+
+		self.bottom_frame.grid(row=4, column=0, columnspan=3, sticky=(tk.E, tk.S, tk.W))
+
+		self.x_scroll_left.pack(side=tk.BOTTOM, fill=tk.X)
+		self.y_scroll_left.pack(side=tk.RIGHT, fill=tk.Y)
+
+		self.x_scroll_right.pack(side=tk.BOTTOM, fill=tk.X)
+		self.y_scroll_right.pack(side=tk.RIGHT, fill=tk.Y)
 
 		# Top Frame Layout
 
 		# Left Frame Layout
-		self.load_batch_found.grid(row=0, column=0, sticky=(tk.N, tk.S))
-		self.found_text.grid(row=1, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
-		
+		self.load_batch_found.pack()
+		self.found_text.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
 		# Right Frame Layout
-		self.load_missing.grid(row=0, column=0, sticky=(tk.N, tk.S))
-		self.missing_text.grid(row=1, column=0, sticky=(tk.N, tk.E, tk.S, tk.W))
+		self.load_missing.pack()
+		self.missing_text.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 		
 		# Bottom Frame Layout
-		self.sound_on_box.grid(row=0, column=0, sticky=tk.N)
-		self.search_button.grid(row=0, column=1, sticky=tk.N)
-		self.single_entry.grid(row=0, column=2, sticky=tk.N)
-		self.last_entry_label.grid(row=0, column=3, sticky=tk.N)
+		self.sound_on_box.grid(row=0, column=0, sticky=tk.S)
+		self.search_button.grid(row=0, column=1, sticky=tk.S)
+		self.single_entry.grid(row=0, column=2, sticky=tk.S)
+		self.last_entry_label.grid(row=0, column=3, sticky=(tk.S, tk.N))
+
+
 
 # Weights
-		#self.master.columnconfigure(0, weight=1)
-		#self.master.columnconfigure(1, weight=1)
-		#self.master.rowconfigure(0, weight=1)
-		#self.master.rowconfigure(1, weight=1)
-		#self.left_frame.columnconfigure(0, weight=1)
-		#self.left_frame.columnconfigure(1, weight=1)
-		#self.left_frame.rowconfigure(0, weight=1)
-		#self.left_frame.rowconfigure(2, weight=1)
-		#self.right_frame.columnconfigure(0, weight=1)
-		#self.right_frame.columnconfigure(1, weight=1)
-		#self.right_frame.rowconfigure(0, weight=1)
-		#self.right_frame.rowconfigure(2, weight=1)
-		#self.found_text.columnconfigure(0, weight=1)
-
+		
+		self.master.columnconfigure(0, weight=1)
+		self.master.columnconfigure(1, weight=1)
+		self.master.columnconfigure(2, weight=1)
+		self.master.columnconfigure(3, weight=1)
+		self.master.rowconfigure(0, weight=3)
+		self.master.rowconfigure(1, weight=1)
+		self.master.rowconfigure(2, weight=1)
+		self.master.rowconfigure(3, weight=1)
 
 
 # Key Bindings
@@ -157,7 +206,7 @@ class CheckyGUI():
 		self.update_last_entry(code)
 		self.update_text()
 		self.single_entry.delete(0, tk.END)
-		
+
 
 
 
