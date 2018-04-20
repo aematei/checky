@@ -35,11 +35,10 @@ class CheckyGUI():
 	# Menu Bar
 		self.menubar = tk.Menu(master=self.top_frame)
 		self.filemenu = tk.Menu(self.menubar, tearoff=0)
-		self.filemenu.add_command(label="New Session")
-		self.filemenu.add_command(label="Load")
-		self.filemenu.add_command(label="Save")
-		self.filemenu.add_command(label="Print...")
-		self.filemenu.add_command(label="Quit")
+		self.filemenu.add_command(label="New Session", command=self.new_session)
+		self.filemenu.add_command(label="Save Found")
+		self.filemenu.add_command(label="Save Missing")
+		self.filemenu.add_command(label="Save Both")
 		self.menubar.add_cascade(label="File", menu=self.filemenu)
 		
 		self.master.config(menu=self.menubar)
@@ -231,6 +230,15 @@ class CheckyGUI():
 		self.update_last_entry(code)
 		self.update_text()
 		self.single_entry.delete(0, tk.END)
+
+	# Menubar Functions
+	def new_session(self):
+		self.checky = Checky()
+		self.update_last_entry('')
+		self.update_text()
+
+
+	
 
 ################################# MAIN #########################################
 
