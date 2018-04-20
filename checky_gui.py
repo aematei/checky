@@ -187,6 +187,7 @@ class CheckyGUI():
 		self.checky.load_batch_found_file(filename)
 		self.update_text()
 
+	# Text Updating
 	def update_text(self):
 		"""Updates both text fields."""
 		self.update_found_text()
