@@ -60,6 +60,16 @@ class Checky():
 				datum = [barcode, description]
 				writer.writerow(datum)
 
+	def save_found(self, filename):
+		"""Saves found data in a txt doc"""
+		file = open(filename, 'w')
+		with file:
+			writer = csv.writer(file)
+			writer.writerow(['Barcodes', 'Description'])
+			for barcode, description in self.found.data.items():
+				datum = [barcode, description]
+				writer.writerow(datum)		
+
 # Sub Functions (used by checky class only)
 
 	def update_missing_load(self):

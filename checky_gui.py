@@ -36,10 +36,10 @@ class CheckyGUI():
 		self.menubar = tk.Menu(master=self.top_frame)
 		self.filemenu = tk.Menu(self.menubar, tearoff=0)
 		self.filemenu.add_command(label="New Session", command=self.new_session)
-		self.filemenu.add_command(label="Save Found")
+		self.filemenu.add_command(label="Save Found", command=self.save_found)
 		self.filemenu.add_command(label="Save Missing",
 			command=self.save_missing)
-		self.filemenu.add_command(label="Save Both")
+		self.filemenu.add_command(label="Save Both", command=self.save_both)
 		self.menubar.add_cascade(label="File", menu=self.filemenu)
 		
 		self.master.config(menu=self.menubar)
@@ -239,8 +239,16 @@ class CheckyGUI():
 		self.update_text()
 
 	def save_missing(self):
-		filename = fd.asksaveasfilename()
+		filename = fd.asksaveasfilename(title="Save Missing Barcodes")
 		self.checky.save_missing(filename)
+
+	def save_found(self):
+		filename = fd.asksaveasfilename(title="Save Found Barcodes")
+		self.checky.save_found(filename)
+
+	def save_both(self):
+		self.save_found()
+		self.save_missing()
 
 
 	
