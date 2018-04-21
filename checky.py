@@ -1,6 +1,7 @@
 from missing import Missing
 from found import Found 
 import simpleaudio as sa
+import csv
 
 class Checky():
 	"""The checky main app"""
@@ -48,6 +49,16 @@ class Checky():
 		elif code in self.found.data:
 			if self.sound_on:
 				self.yes_sound.play()
+
+	def save_missing(self, filename):
+		"""Saves missing data in a two column csv doc."""
+		file = open(filename, 'w')
+		with file:
+			writer = csv.writer(file)
+			writer.writerow(['Barcodes', 'Description'])
+			for barcode, description in self.missing.data.items():
+				datum = [barcode, description]
+				writer.writerow(datum)
 
 # Sub Functions (used by checky class only)
 
