@@ -35,12 +35,14 @@ class CheckyGUI():
 	# Menu Bar
 		self.menubar = tk.Menu(master=self.top_frame)
 		self.filemenu = tk.Menu(self.menubar, tearoff=0)
+		self.save_menu = tk.Menu(self.filemenu, tearoff=0)
 		self.filemenu.add_command(label="New Session", command=self.new_session)
-		self.filemenu.add_command(label="Save Found", command=self.save_found)
-		self.filemenu.add_command(label="Save Missing",
+		self.save_menu.add_command(label="Save Found", command=self.save_found)
+		self.save_menu.add_command(label="Save Missing",
 			command=self.save_missing)
-		self.filemenu.add_command(label="Save Both", command=self.save_both)
+		self.save_menu.add_command(label="Save Both", command=self.save_both)
 		self.menubar.add_cascade(label="File", menu=self.filemenu)
+		self.filemenu.add_cascade(label="Save", menu=self.save_menu)
 		
 		self.master.config(menu=self.menubar)
 
