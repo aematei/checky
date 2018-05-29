@@ -12,6 +12,8 @@ class CheckyGUI():
 	# Main Frame
 		self.master = master
 
+	# 
+
 	# Sub Frames
 
 		self.top_frame = tk.Frame(master=self.master)
@@ -41,6 +43,7 @@ class CheckyGUI():
 		self.save_menu.add_command(label="Save Missing",
 			command=self.save_missing)
 		self.save_menu.add_command(label="Save Both", command=self.save_both)
+		
 		self.menubar.add_cascade(label="File", menu=self.filemenu)
 		self.filemenu.add_cascade(label="Save", menu=self.save_menu)
 		
@@ -236,6 +239,7 @@ class CheckyGUI():
 
 	# Menubar Functions
 	def new_session(self):
+		self.close_save()		
 		self.checky = Checky()
 		self.update_last_entry('')
 		self.update_text()
@@ -243,17 +247,53 @@ class CheckyGUI():
 	def save_missing(self):
 		filename = fd.asksaveasfilename(title="Save Missing Barcodes")
 		self.checky.save_missing(filename)
+		try:
+			self.exit_close_save()
+		except AttributeError:
+			None
 
 	def save_found(self):
 		filename = fd.asksaveasfilename(title="Save Found Barcodes")
 		self.checky.save_found(filename)
+		try:
+			self.exit_close_save()
+		except AttributeError:
+			None
 
 	def save_both(self):
 		self.save_found()
 		self.save_missing()
 
+	def exit_close_save(self):
+		self.close.destroy()
+		self.close.quit()
 
-	
+	def close_save(self):
+		self.close = tk.Toplevel()
+		self.close.resizable(False, False)
+		self.close.transient([self.master])
+		self.close_str = "Do you want to close this session without saving?"
+		self.close_label = tk.Label(master=self.close, text=self.close_str)
+		self.close_button = tk.Button(master=self.close, text="Don't Save",
+			command=self.exit_close_save)
+		self.save_found_button = tk.Button(master=self.close, text='Save Found',
+			command=self.save_found)
+		self.save_missing_button = tk.Button(master=self.close,
+			text='Save Missing', command=self.save_missing)
+		self.save_both = tk.Button(master=self.close, text='Save Both',
+			command=self.save_both)
+
+		self.close_label.pack(side=tk.TOP)
+		self.close_button.pack(side=tk.RIGHT)
+		self.save_found_button.pack(side=tk.RIGHT)
+		self.save_missing_button.pack(side=tk.RIGHT)
+		self.save_both.pack(side=tk.RIGHT)
+		self.close.mainloop()
+		
+
+#class CloseWindow():
+#	def __init__
+
 
 ################################# MAIN #########################################
 
