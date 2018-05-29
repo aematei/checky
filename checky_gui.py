@@ -11,8 +11,7 @@ class CheckyGUI():
 
 	# Main Frame
 		self.master = master
-
-	# 
+		self.master.minsize(330, 150)
 
 	# Sub Frames
 
@@ -290,11 +289,6 @@ class CheckyGUI():
 		self.save_both.pack(side=tk.RIGHT)
 		self.close.mainloop()
 		
-
-#class CloseWindow():
-#	def __init__
-
-
 ################################# MAIN #########################################
 
 if __name__ == "__main__":
