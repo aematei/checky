@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog as fd
+from tkinter import ttk
 
 from checky import Checky
 
@@ -7,13 +8,24 @@ from checky import Checky
 class CheckyGUI():
 	def __init__(self, master, *args, **kwargs):
 
+# Colors
+		self.bg_tan = '#e5e1da'
+		self.bg_green = '#f7fff7'
+		self.bg_red = '#fff7f7'
+
 # Widgets 
 
 	# Main Frame
 		self.master = master
 		self.master.minsize(330, 150)
+		self.master.withdraw()
+		self.master.after(0 ,self.master.deiconify)
 
-	# Sub Frames
+		self.checky_style = ttk.Style()
+		self.checky_style.configure('found.Treeview', fieldbackground=self.bg_green)
+		self.checky_style.configure('missing.Treeview', fieldbackground=self.bg_red)
+
+	# !!!Sub Frames!!!
 
 		self.top_frame = tk.Frame(master=self.master)
 
@@ -48,22 +60,46 @@ class CheckyGUI():
 		
 		self.master.config(menu=self.menubar)
 
-	# Text Widgets 
+	# !!!Text Widgets!!!
+		self.default_column_width = 485
 		self.load_batch_found = tk.Button(master=self.load_frame_left,
 			text="Load Found", command=self.load_batch_found_file)
-		self.found_text = tk.Text(master=self.text_frame_left,
-			state=tk.DISABLED, height=500)
+		
+		#!!!
+		self.found_text = ttk.Treeview(master=self.text_frame_left, height=50, padding=5, style='found.Treeview')
+
+		self.found_text["columns"] = ("1")
+		self.found_text.column("#0", minwidth=70, width=120)
+		self.found_text.column("#1", minwidth=70, width=self.default_column_width)
+		self.found_text.heading("#0", text="Barcode")
+		self.found_text.heading("#1", text="Description")
+
+
+
 
 		self.load_missing = tk.Button(master=self.load_frame_right,
 			text="Load Missing", command=self.load_missing_file)
-		self.missing_text = tk.Text(master=self.text_frame_right,
-			state=tk.DISABLED)	
+		
+		#!!!
+		self.missing_text = ttk.Treeview(master=self.text_frame_right, height=50, padding=5)
+
+		self.missing_text["columns"] = ("1")
+		self.missing_text.column("#0", minwidth=70, width=120)
+		self.missing_text.column("#1", minwidth=70, width=self.default_column_width)
+		self.missing_text.heading("#0", text="Barcode")
+		self.missing_text.heading("#1", text="Description")
+
 
 		self.y_scroll_right.config(command=self.missing_text.yview)
 		self.x_scroll_right.config(command=self.missing_text.xview)
+		self.missing_text.configure(xscrollcommand=self.x_scroll_right.set)
+		self.missing_text.configure(yscrollcommand=self.y_scroll_right.set)
 
-		self.y_scroll_left.config(command=self.missing_text.yview)
-		self.x_scroll_left.config(command=self.missing_text.xview)
+
+		self.y_scroll_left.config(command=self.found_text.yview)
+		self.x_scroll_left.config(command=self.found_text.xview)
+		self.found_text.configure(xscrollcommand=self.x_scroll_left.set)
+		self.found_text.configure(yscrollcommand=self.y_scroll_left.set)
 		
 	# Bottom Frame Widgets
 		self.sound_on_var = tk.BooleanVar()
@@ -79,11 +115,6 @@ class CheckyGUI():
 
 # Styling
 
-	# Colors
-		self.bg_tan = '#e5e1da'
-		self.bg_green = '#f7fff7'
-		self.bg_red = '#fff7f7'
-
 	# Top Frame Styling
 
 		self.master["bg"] = self.bg_tan
@@ -92,18 +123,20 @@ class CheckyGUI():
 		self.load_frame_right.config(bg=self.bg_tan)
 		self.bottom_frame.config(bg=self.bg_tan)
 
-	# Text Frames Styling
+	# !!!Text Frames Styling!!!
+
+
 
 		self.load_frame_left.config(bg=self.bg_tan)
 		self.load_frame_right.config(bg=self.bg_tan)
 		self.load_batch_found.config(bg=self.bg_tan, highlightthickness=0,
 			highlightbackground=self.bg_tan)
-		self.found_text.config(relief="sunken", bg=self.bg_green,
-			highlightbackground=self.bg_green)
+#		self.found_text.config(relief="sunken", bg=self.bg_green,
+#			highlightbackground=self.bg_green)
 		self.load_missing.config(bg=self.bg_tan, highlightthickness=0,
 			highlightbackground=self.bg_tan)
-		self.missing_text.config(bg=self.bg_red,
-			highlightbackground=self.bg_red)
+#		self.missing_text.config(bg=self.bg_red,
+#			highlightbackground=self.bg_red)
 
 	# Bottom Frame Styling
 
@@ -147,7 +180,7 @@ class CheckyGUI():
 
 	# Right Frame Layout
 		self.load_missing.pack()
-		self.missing_text.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+		self.missing_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 		
 	# Bottom Frame Layout
 		self.sound_on_box.grid(row=0, column=0, sticky=tk.S)
@@ -199,21 +232,19 @@ class CheckyGUI():
 
 	def update_found_text(self):
 		"""Updates the 'Found' data text field."""
-		self.found_text.config(state=tk.NORMAL)
-		self.found_text.delete(1.0, tk.END)
+		for barcode in self.found_text.get_children():
+			self.found_text.delete(barcode)
 		for barcode, description in self.checky.found.data.items():
-			self.found_text.insert(tk.INSERT, barcode + ':' + description
-				+ '\n')
-		self.found_text.config(state=tk.DISABLED)
+			self.found_text.insert("", 0, text=barcode, values=('"'+description)+'"')
 	
 	def update_missing_text(self):
 		"""Updates the 'missing' data text field."""
-		self.missing_text.config(state=tk.NORMAL)
-		self.missing_text.delete(1.0, tk.END)
+		for barcode in self.missing_text.get_children():
+			self.missing_text.delete(barcode)
 		for barcode, description in self.checky.missing.data.items():
-			self.missing_text.insert(tk.INSERT, barcode + ':' + description
-				+ '\n')
-		self.missing_text.config(state=tk.DISABLED)
+			self.missing_text.insert("", 0, text=barcode, values=('"'+description+'"'))
+
+
 
 	def update_last_entry(self, code):
 		self.last_entry_label.config(state=tk.NORMAL)
@@ -288,6 +319,8 @@ class CheckyGUI():
 		self.save_missing_button.pack(side=tk.RIGHT)
 		self.save_both.pack(side=tk.RIGHT)
 		self.close.mainloop()
+
+
 		
 ################################# MAIN #########################################
 
