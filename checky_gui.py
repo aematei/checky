@@ -209,20 +209,26 @@ class CheckyGUI():
 	# Missing 
 	def load_missing_file(self):
 		"""Loads missing data from a CSV file into the 'Missing' object."""
-		filename = fd.askopenfilename(initialdir="/Desktop",
-			title="Select csv file", filetypes=(("csv files","*.csv"),
-				("all files","*.*")))
-		self.checky.load_missing_file(filename)
-		self.update_text()
+		try:
+			filename = fd.askopenfilename(initialdir="/Desktop",
+				title="Select csv file", filetypes=(("csv files","*.csv"),
+					("all files","*.*")))
+			self.checky.load_missing_file(filename)
+			self.update_text()
+		except FileNotFoundError:
+			pass
 	
 	# Found
 	def load_batch_found_file(self):
 		"""Loads a batch of found data from a text file."""
-		filename = fd.askopenfilename(initialdir="/Desktop",
-			title="Select csv file", filetypes=(("txt files","*.txt"),
-				("all files","*.*")))
-		self.checky.load_batch_found_file(filename)
-		self.update_text()
+		try:
+			filename = fd.askopenfilename(initialdir="/Desktop",
+				title="Select csv file", filetypes=(("txt files","*.txt"),
+					("all files","*.*")))
+			self.checky.load_batch_found_file(filename)
+			self.update_text()
+		except FileNotFoundError:
+			pass
 
 	# Text Updating
 	def update_text(self):
